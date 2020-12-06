@@ -11,8 +11,21 @@ class Task {
     ).toISOString()}') RETURNING value, is_done, deadline`);
     return createdTask;
   }
-  static findById(id) {}
-  static findAll() {}
+
+  static async findById(id) {
+    const {
+      rows: [foundTask],
+    } = await Task.client.query(
+      `SELECT value, is_done, deadline FROM tasks WHERE id = ${id}`
+    );
+    return foundTask;
+  }
+
+  static async findAll() {
+    const { rows } = await Task.client.query(`SELECT value, is_done, deadline
+    FROM tasks`);
+    return rows;
+  }
   static update(id, values) {}
   static delete(id) {}
 }

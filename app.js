@@ -11,13 +11,13 @@ app.post('/task', validateTask.validateOnCreate, taskController.createTask);
 
 app
   .route('/tasks/:taskId')
-  .get() //read task
+  .get(taskController.getTask) //read task
   .patch(validateTask.validateOnUpdate) //update task
   .delete(); //delete task
 
 //read tasks
 //http://localhost:3000/tasks/20
-app.get('tasks');
+app.route('/tasks').get(taskController.getAllTasks);
 
 app.get('/user/*/*', (req, res) => {
   console.log('req.params[0]: ', req.params[0]);

@@ -13,7 +13,7 @@ app
   .route('/tasks/:taskId')
   .get(taskController.getTask) //read task
   .patch(validateTask.validateOnUpdate) //update task
-  .delete(); //delete task
+  .delete(taskController.removeTask); //delete task
 
 //read tasks
 //http://localhost:3000/tasks/20

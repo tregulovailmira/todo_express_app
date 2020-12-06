@@ -27,7 +27,15 @@ class Task {
     return rows;
   }
   static update(id, values) {}
-  static delete(id) {}
+
+  static async delete(id) {
+    const {
+      rows: [deletedTask],
+    } = await Task.client.query(
+      `DELETE FROM tasks WHERE id = ${id} RETURNING value, is_done, deadline`
+    );
+    return deletedTask;
+  }
 }
 
 module.exports = Task;

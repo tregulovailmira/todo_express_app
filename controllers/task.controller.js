@@ -39,4 +39,16 @@ module.exports.getAllTasks = async (req, res, next) => {
 
 module.exports.updateTask = async (req, res) => {};
 
-module.exports.removeTask = async (req, res) => {};
+module.exports.removeTask = async (req, res, next) => {
+  const {
+    params: { taskId },
+  } = req;
+  try {
+    const deletedTask = await Task.delete(taskId);
+    deletedTask
+      ? res.status(200).send(deletedTask)
+      : res.status(404).send('The task not found');
+  } catch (error) {
+    next(error);
+  }
+};

@@ -1,4 +1,5 @@
 module.exports.Task = require('./task.model');
+const Task = require('./task.model');
 
 const { Client } = require('pg');
 
@@ -10,5 +11,14 @@ const dbConfig = {
   port: 5432,
 };
 const client = new Client(dbConfig);
+Task.client = client;
 
-client.connect();
+client.connect(() => {
+  console.log('Connected to PostgreSQL');
+});
+
+process.on('beforeExit', () => {
+  client.end();
+});
+
+module.exports = Task;

@@ -1,0 +1,7 @@
+PATCH http://localhost:3000/tasks/5
+Content-Type: application/json
+
+{
+    "value": "new text",
+    "isDone": "true"
+}

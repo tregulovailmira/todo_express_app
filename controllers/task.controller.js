@@ -37,7 +37,23 @@ module.exports.getAllTasks = async (req, res, next) => {
   }
 };
 
-module.exports.updateTask = async (req, res) => {};
+module.exports.updateTask = async (req, res, next) => {
+  const {
+    params: { taskId },
+    body,
+  } = req;
+
+  try {
+    const foundTask = Task.findById(taskId);
+    if (foundTask) {
+      const updatedTask = await Task.update(taskId, body);
+      return res.status(200).send(updatedTask);
+    }
+    res.status(404).send('Tasks not found');
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports.removeTask = async (req, res, next) => {
   const {

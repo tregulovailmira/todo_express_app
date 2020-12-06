@@ -12,7 +12,7 @@ app.post('/task', validateTask.validateOnCreate, taskController.createTask);
 app
   .route('/tasks/:taskId')
   .get(taskController.getTask) //read task
-  .patch(validateTask.validateOnUpdate) //update task
+  .patch(validateTask.validateOnUpdate, taskController.updateTask) //update task
   .delete(taskController.removeTask); //delete task
 
 //read tasks

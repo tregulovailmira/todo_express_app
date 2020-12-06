@@ -2,7 +2,6 @@ class Task {
   //отвечает за обновление данных в контейнере, где они хранятся(массив, Map...)
   static async create(values) {
     const { value, isDone, deadline } = values;
-    console.log(values);
     const {
       rows: [createdTask],
     } = await Task.client.query(`INSERT INTO tasks(value, is_done, deadline)
@@ -26,7 +25,20 @@ class Task {
     FROM tasks`);
     return rows;
   }
-  static update(id, values) {}
+
+  static async update(id, values) {
+    console.log(values);
+    const {
+      rows: [updatedTask],
+    } = await Task.client.query(`UPDATE tasks SET 
+      ${values.value ? `value = '${values.value}'` : ''}
+      ${values.isDone && values.value ? ',' : ''}
+      ${values.isDone ? `is_done = '${values.isDone}'` : ''}
+      ${values.deadline && values.isDone && values.value ? ',' : ''}
+      ${values.deadline ? `deadline = '${values.deadline}'` : ''} 
+    WHERE id=${id} RETURNING value, is_done, deadline`);
+    return updatedTask;
+  }
 
   static async delete(id) {
     const {

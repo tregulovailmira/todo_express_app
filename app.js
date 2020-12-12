@@ -1,5 +1,5 @@
 const express = require('express');
-const { validateTask } = require('./middleware');
+const { validateTask, errorHandlers } = require('./middleware');
 const { taskController } = require('./controllers');
 
 const app = express();
@@ -25,10 +25,6 @@ app.get('/user/*/*', (req, res) => {
 });
 
 //error handler
-app.use((error, req, res, next) => {
-  res.status(error?.status ?? 500).send({
-    message: error?.message ?? 'Enternal server error',
-  });
-});
+app.use(errorHandlers.sequelizeErrorHandler, errorHandlers.errorHandler);
 
 module.exports = app;

@@ -1,9 +1,10 @@
-const Task = require('../models');
+const { Task } = require('../models');
 
 module.exports.createTask = async (req, res, next) => {
   const { body } = req;
   try {
     const createdTask = await Task.create(body);
+    console.log('createdTask:>> ', createdTask);
     res.status(201).send(createdTask);
   } catch (error) {
     next(error);

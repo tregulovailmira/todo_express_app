@@ -2,7 +2,8 @@ POST http://localhost:3000/task
 Content-Type: application/json
 
 {
-    "value": "New task",
+    "id": 158,
+    "value": "New task10",
     "isDone": "false",
     "deadline": "2021-11-11 11:11"
 }

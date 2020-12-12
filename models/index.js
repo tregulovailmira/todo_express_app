@@ -1,24 +1,51 @@
-module.exports.Task = require('./task.model');
-const Task = require('./task.model');
+'use strict';
 
-const { Client } = require('pg');
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
+const db = {};
 
-const dbConfig = {
-  database: 'todo_db',
-  user: 'postgres',
-  password: 'Bkmvbhf1995',
-  host: '127.0.0.1',
-  port: 5432,
-};
-const client = new Client(dbConfig);
-Task.client = client;
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
+}
 
-client.connect(() => {
-  console.log('Connected to PostgreSQL');
+fs.readdirSync(__dirname)
+  .filter((file) => {
+    return (
+      file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
+    );
+  })
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes
+    );
+    db[model.name] = model;
+  });
+
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
-process.on('beforeExit', () => {
-  client.end();
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+sequelize.sync().catch((err) => {
+  console.log('error: ', error);
+  process.exit(1);
 });
 
-module.exports = Task;
+module.exports = db;
